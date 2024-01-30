@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
-import * as AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand, QueryCommand, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import { OpenAIService } from '../openai/openai.service';
 
 
 @Injectable()
 export class PostService {
-  private dynamoDb: AWS.DynamoDB.DocumentClient;
+  private dynamoDb: DynamoDBDocumentClient;
 
 
   constructor(private readonly openAIService: OpenAIService) {
-    AWS.config.update({ region: `${process.env.AWS_REGION}` }); 
-    this.dynamoDb = new AWS.DynamoDB.DocumentClient();
+    const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+    this.dynamoDb = DynamoDBDocumentClient.from(client);
 }
 
   async addPost(createPostDto: CreatePostDto): Promise<any> {
@@ -30,7 +31,7 @@ export class PostService {
       },
     };
   
-      return this.dynamoDb.put(params).promise();
+      return this.dynamoDb.send(new PutCommand(params));
 
     } catch (error) {
       return error;
@@ -46,7 +47,7 @@ export class PostService {
         ':category': category,
       },
     };
-    return this.dynamoDb.query(params).promise();
+    return this.dynamoDb.send(new QueryCommand(params));
   }
 
   async getPostById(id: string): Promise<any> {
@@ -56,6 +57,6 @@ export class PostService {
         id: id,
       },
     };
-    return this.dynamoDb.get(params).promise();
+    return this.dynamoDb.send(new GetCommand(params));
   }
 }
