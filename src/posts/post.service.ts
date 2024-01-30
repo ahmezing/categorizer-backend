@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import * as AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
+import { OpenAIService } from '../openai/openai.service';
 
 
 @Injectable()
@@ -9,7 +10,7 @@ export class PostService {
   private dynamoDb: AWS.DynamoDB.DocumentClient;
 
 
-  constructor() {
+  constructor(private readonly openAIService: OpenAIService) {
     AWS.config.update({ region: `${process.env.AWS_REGION}` }); 
     this.dynamoDb = new AWS.DynamoDB.DocumentClient();
 }
@@ -17,6 +18,7 @@ export class PostService {
   async addPost(createPostDto: CreatePostDto): Promise<any> {
     try {
     const newUniquePostId = uuidv4(); // Generate a unique ID for the new post
+    const category = await this.openAIService.categorizePost(createPostDto.title, createPostDto.body);
     const params = {
       TableName: 'Posts',
       Item: {
@@ -24,7 +26,7 @@ export class PostService {
         author: createPostDto.author,
         title: createPostDto.title,
         body: createPostDto.body,
-        category: 'test',
+        category: category,
       },
     };
   
