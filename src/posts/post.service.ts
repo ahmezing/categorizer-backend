@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, QueryCommand, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand, QueryCommand, GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import { OpenAIService } from '../openai/openai.service';
 
@@ -12,7 +12,7 @@ export class PostService {
 
 
   constructor(private readonly openAIService: OpenAIService) {
-    const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+    const client = new DynamoDBClient({ region: process.env.AWS_REGION_CODE });
     this.dynamoDb = DynamoDBDocumentClient.from(client);
 }
 
@@ -48,6 +48,13 @@ export class PostService {
       },
     };
     return this.dynamoDb.send(new QueryCommand(params));
+  }
+
+  async getPosts(): Promise<any> {
+    const params = {
+      TableName: 'Posts',
+    };
+    return this.dynamoDb.send(new ScanCommand(params));
   }
 
   async getPostById(id: string): Promise<any> {
