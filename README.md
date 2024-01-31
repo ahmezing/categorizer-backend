@@ -1,73 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# The Categorizer
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+The Categorizer is a backend for a blogging platform built with Nest.js. It allows for creating, retrieving, and categorizing blog posts. The app integrates with AWS services for data storage and serverless execution and utilizes the OpenAI API for automatic post categorization.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
+- **Create New Blog Post**: Users can add a new post with an author name, title, and body.
+- **Automatic Categorization**: The app categorizes each new post using the OpenAI API.
+- **Fetch Posts**: Retrieve all posts or filter them by category.
+- **Fetch Post by ID**: Retrieve details of a specific post using its ID.
 
-## Description
+## Technologies
+- Nest.js
+- TypeScript
+- AWS (Lambda, DynamoDB, API Gateway, IAM, CloudWatch)
+- OpenAI API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Getting Started
 
-## Installation
+### Prerequisites
+- Node.js (v12+)
+- npm (v6+)
+- AWS CLI (configured with user credentials)
+- OpenAI API key
 
-```bash
-$ npm install
-```
+### Installation
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/ahmezing/categorizer-backend
+    cd categorizer-backend
+    ```
 
-## Running the app
+2. **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-```bash
-# development
-$ npm run start
+3. **Environment Variables**
+    - Set up the required environment variables:
+      - `AWS_REGION_CODE`
+      - `CATEGORIZATION_PROMPT`
+      - `OPENAI_API_KEY`
 
-# watch mode
-$ npm run start:dev
+4. **Running Locally**
+    ```bash
+    npm run start
+    ```
 
-# production mode
-$ npm run start:prod
-```
+## Deployment
+Deploy the application to AWS Lambda:
 
-## Test
+1. **Configure the Serverless Framework**
+    - Update `serverless.yml` with your AWS configurations.
 
-```bash
-# unit tests
-$ npm run test
+2. **Deploy**
+    ```bash
+    serverless deploy
+    ```
 
-# e2e tests
-$ npm run test:e2e
+## API Endpoints
+- **Add Post**: `POST /posts`
+  - Body: `{ "author": "name", "title": "title", "body": "content" }`
 
-# test coverage
-$ npm run test:cov
-```
+- **Get All Posts**: `GET /posts`
 
-## Support
+- **Get Posts by Category**: `GET /posts?category=categoryName`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Get Post by ID**: `GET /posts/:id`
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
-
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/ahmezing/categorizer-backend/blob/main/LICENSE) file for details.
